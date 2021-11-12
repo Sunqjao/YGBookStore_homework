@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.UserDao">
+    <resultMap id="userMap" type="com.sun.entity.User">
+        <id column="uid" property="uid"></id>
+        <result column="userName" property="userName"></result>
+        <result column="password" property="password"></result>
+        <result column="address" property="address"></result>
+        <result column="money" property="money"></result>
+        <result column="phone" property="phone"></result>
+        <collection property="books" ofType="com.sun.entity.Book">
+            <id column="bid" property="bid"></id>
+            <result column="bookName" property="bookName"></result>
+            <result column="cost" property="cost"></result>
+            <result column="preCost" property="preCost"></result>
+            <result column="author" property="author"></result>
+            <result column="nums" property="nums"></result>
+        </collection>
+    </resultMap>
+    <select id="findUser" parameterType="com.sun.entity.User" resultMap="userMap">
+        select u.uid as uid,b.bid as bid,c.bid as cbid,c.uid as cuid,u.userName,u.password,u.address,u.money,u.phone,
+               b.author,b.bookName,b.cost,c.nums
+        from books b,user u,cart c
+        where u.userName=#{userName} and u.password=#{password} and c.uid=u.uid and b.bid=c.bid
+    </select>
+    <insert id="addUser" parameterType="com.sun.entity.User">
+        insert into user(userName,password,address,money,phone)
+        values(#{userName},#{password},#{address},#{money},#{phone})
+    </insert>
+    <update id="update" parameterType="com.sun.entity.User">
+        update user set userName=#{userName},password=#{password},address=#{address},money=#{money},phone=#{phone} where uid = #{uid}
+    </update>
+    <select id="findUserNoBooks" parameterType="com.sun.entity.User" resultType="com.sun.entity.User">
+        select * from user where userName=#{userName} and password=#{password}
+    </select>
+</mapper>

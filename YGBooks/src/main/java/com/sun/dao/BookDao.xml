@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sun.dao.BookDao">
+    <select id="findBookLike" parameterType="java.lang.String" resultType="com.sun.entity.Book">
+        select * from books where bookName like concat('%',#{key},'%')
+    </select>
+<!--    <resultMap id="bookMap" type="com.sun.entity.Book">-->
+<!--        <id column="uid" property="uid"></id>-->
+<!--        <result column="bookName" property="bookName"></result>-->
+<!--        <result column="cost" property="cost"></result>-->
+<!--        <result column="preCost" property="preCost"></result>-->
+<!--        <result column="author" property="author"></result>-->
+<!--        <result column="picUrl" property="picUrl"></result>-->
+<!--        <result column="detail" property="detail"></result>-->
+<!--        <collection property="tags" ofType="java.lang.String" column="tagName"></collection>-->
+<!--    </resultMap>-->
+<!--    <select id="findOneBook" parameterType="java.lang.Integer" resultMap="bookMap">-->
+<!--        select tm.tid as tmtid,tm.bid as tmbid,b.bookName,b.cost,b.preCost,b.author,b.detail,b.picUrl,t.tagName,t.tid,b.bid-->
+<!--        from books b,tagmap tm,tags t-->
+<!--        where b.bid=#{bid} and tm.bid=b.bid and t.tid=tm.tid-->
+<!--    </select>-->
+        <select id="findOneBook" parameterType="java.lang.Integer" resultType="com.sun.entity.Book">
+            select *
+            from books
+            where bid=#{bid}
+        </select>
+    <select id="findBookTag" parameterType="java.lang.Integer" resultType="com.sun.entity.Book">
+        select tm.tid as tmtid,tm.bid as tmbid,b.bookName,b.cost,b.preCost,b.author,b.detail,b.picUrl,t.tagName,t.tid,b.bid
+        from books b,tags t,tagmap tm
+        where t.tid=#{tagID} and tm.tid=t.tid and b.bid=tm.bid
+    </select>
+    <insert id="luRuBook" parameterType="com.sun.entity.Book">
+        insert into books(bid,bookName,cost,preCost,author) values (#{bid},#{bookName},#{cost},#{preCost},#{author})
+    </insert>
+</mapper>
